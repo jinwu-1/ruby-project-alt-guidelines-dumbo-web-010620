@@ -13,7 +13,6 @@
 ActiveRecord::Schema.define(version: 3) do
 
   create_table "appointments", force: :cascade do |t|
-    t.string "date"
     t.string "time"
     t.integer "user_id"
     t.integer "bike_id"
