@@ -1,3 +1,6 @@
 require_relative '../config/environment'
 
-puts "hello world"
+app = CLI.new
+app.run
+
+binding.pry
