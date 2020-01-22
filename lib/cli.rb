@@ -26,6 +26,8 @@ class CLI
     end
 
 
+# Users
+
     def user_valid?
         if User.find_by(name: @user_name)
             true
@@ -58,6 +60,8 @@ class CLI
         end
     end
 
+
+# Appointments
     
     def appointment_valid?
         if Appointment.find_by(user_id: @user.id)
@@ -76,6 +80,11 @@ class CLI
             puts "Please create an appointment."
             appointment_menu
         end
+    end
+
+    
+    def display_appointments
+        pp Appointment.where(user_id: @user.id)
     end
 
 
@@ -98,17 +107,17 @@ class CLI
     def location_selector
         prompt = TTY::Prompt.new
         prompt.select("Select location of bike") do |menu|
-            menu.choice "Bronx", -> {pp @array = Bike.where(location: "Bronx")}
-            menu.choice "Queens", -> {pp @array = Bike.where(location: "Queens")}
-            menu.choice "Brooklyn", -> {pp @array = Bike.where(location: "Brooklyn")}
-            menu.choice "Manhattan", -> {pp @array = Bike.where(location: "Manhattan")}
-            menu.choice "Staten Island", -> {pp @array = Bike.where(location: "Staten Island")}
+            menu.choice "Bronx", -> {pp Bike.where(location: "Bronx")}
+            menu.choice "Queens", -> {pp Bike.where(location: "Queens")}
+            menu.choice "Brooklyn", -> {pp Bike.where(location: "Brooklyn")}
+            menu.choice "Manhattan", -> {pp Bike.where(location: "Manhattan")}
+            menu.choice "Staten Island", -> {pp Bike.where(location: "Staten Island")}
         end
     end
 
 
     def update_appointment
-        check_appointment
+        display_appointments
         puts "Please enter the ID of the appointment you want to update."
         id = gets.chomp
         puts "Please enter new date of appointment in MM/DD/YYYY format."
@@ -120,7 +129,8 @@ class CLI
         Appointment.find(id).update(time: time)
         
         puts "Your appointment have been updated"
-        pp Appointment.find(id)
+        Appointment.find(id)
+        display_appointments
         appointment_menu
     end
 
@@ -131,7 +141,6 @@ class CLI
         id = gets.chomp
         Appointment.find(id).destroy
         puts "Your appointment have been deleted."
-        pp check_appointment
         appointment_menu
     end
 
@@ -139,8 +148,40 @@ class CLI
     def delete_all_appointments
         Appointment.where(user_id: @user.id).destroy_all
         puts "Your appointments have been deleted."
-        pp check_appointment
         appointment_menu
+    end
+
+
+#Bikes
+
+    def bike_by_location
+        prompt = TTY::Prompt.new
+        prompt.select("Select location of bike") do |menu|
+            menu.choice "Bronx", -> {pp Bike.where(location: "Bronx")}
+            menu.choice "Queens", -> {pp Bike.where(location: "Queens")}
+            menu.choice "Brooklyn", -> {pp Bike.where(location: "Brooklyn")}
+            menu.choice "Manhattan", -> {pp Bike.where(location: "Manhattan")}
+            menu.choice "Staten Island", -> {pp Bike.where(location: "Staten Island")}
+        end
+        bike_menu
+    end
+
+
+# CLI Menus
+
+    def main_menu
+        prompt = TTY::Prompt.new
+
+        welcome
+        puts "Hello #{@user_name.capitalize}!"
+        prompt.select("Kindly ignore default message") do |menu|
+            menu.choice "login", -> {check_user}
+            menu.choice "create account", -> {create_user}
+            menu.choice "appointments", -> {appointment_menu}
+            menu.choice "bikes", -> {bike_menu}
+            menu.choice "exit"
+        end
+
     end
 
 
@@ -150,7 +191,7 @@ class CLI
         welcome
         puts "Hello #{@user_name.capitalize}!"
         prompt.select("What would you like to do today?") do |menu|
-            menu.choice "make an appointment", -> {create_appointmen}
+            menu.choice "make an appointment", -> {create_appointment}
             menu.choice "check an appointment", -> {check_appointment}
             menu.choice "update an appointment", -> {update_appointment}
             menu.choice "delete an appointment", -> {delete_appointment}
@@ -160,16 +201,15 @@ class CLI
 
     end
 
-    def main_menu
+
+    def bike_menu
         prompt = TTY::Prompt.new
 
         welcome
         puts "Hello #{@user_name.capitalize}!"
-        prompt.select("Hi") do |menu|
-            menu.choice "login", -> {check_user}
-            menu.choice "create account", -> {create_user}
-            menu.choice "appointments", -> {appointment_menu}
-            menu.choice "exit"
+        prompt.select("What would you like to do today?") do |menu|
+            menu.choice "bike by location", -> {bike_by_location}
+            menu.choice "exit", -> {main_menu}
         end
 
     end
