@@ -11,7 +11,7 @@ class CLI
         welcome
         enter_name
         clear
-        menu
+        main_menu
     end
 
 
@@ -23,7 +23,6 @@ class CLI
     def enter_name
         puts "Please enter your name."
         @user_name = gets.chomp.downcase.capitalize
-        check_user
     end
 
 
@@ -39,14 +38,24 @@ class CLI
     def check_user
         if user_valid?
             @user = User.find_by(name: @user_name)
+            puts "You are logged in."
+            main_menu
         else
             puts "Please create an account in our app."
+            main_menu
         end
     end
 
 
     def create_user
-        @user = User.create(name: @user_name)
+        if user_valid?
+            puts "You already have an account."
+            main_menu
+        else
+            @user = User.create(name: @user_name)
+            puts "Account have been created."
+            main_menu
+        end
     end
 
     
@@ -61,9 +70,11 @@ class CLI
 
     def check_appointment
         if appointment_valid?
-            Appointment.where(user_id: @user.id)
+            pp Appointment.where(user_id: @user.id)
+            appointment_menu
         else
             puts "Please create an appointment."
+            appointment_menu
         end
     end
 
@@ -79,6 +90,8 @@ class CLI
         bike_id = gets.chomp
         
         Appointment.create(date: date, time: time, user_id: @user.id, bike_id: bike_id)
+        puts "Appointment have been created." # Interpolate the string ***
+        appointment_menu
     end
 
 
@@ -94,21 +107,68 @@ class CLI
     end
 
 
-    def delete_all_appointment
-        Appointment.where(user_id: @user.id).delete_all
+    def update_appointment
+        check_appointment
+        puts "Please enter the ID of the appointment you want to update."
+        id = gets.chomp
+        puts "Please enter new date of appointment in MM/DD/YYYY format."
+        date = gets.chomp
+        puts "Please enter new time of the appointment. ex: 3:45PM"
+        time = gets.chomp
+
+        Appointment.find(id).update(date: date)
+        Appointment.find(id).update(time: time)
+        
+        puts "Your appointment have been updated"
+        pp Appointment.find(id)
+        appointment_menu
+    end
+
+    
+    def delete_appointment
+        check_appointment
+        puts "Please enter the ID of the appointment you want to delete."
+        id = gets.chomp
+        Appointment.find(id).destroy
+        puts "Your appointment have been deleted."
+        pp check_appointment
+        appointment_menu
     end
 
 
-    def menu
+    def delete_all_appointments
+        Appointment.where(user_id: @user.id).destroy_all
+        puts "Your appointments have been deleted."
+        pp check_appointment
+        appointment_menu
+    end
+
+
+    def appointment_menu
         prompt = TTY::Prompt.new
 
         welcome
         puts "Hello #{@user_name.capitalize}!"
         prompt.select("What would you like to do today?") do |menu|
-            menu.choice "make an appointment", -> {pp create_appointment}
-            menu.choice "check an appointment", -> {pp check_appointment}
-            menu.choice "update an appointment", -> {}
-            menu.choice "delete an appointment", -> {delete_all_appointment}
+            menu.choice "make an appointment", -> {create_appointmen}
+            menu.choice "check an appointment", -> {check_appointment}
+            menu.choice "update an appointment", -> {update_appointment}
+            menu.choice "delete an appointment", -> {delete_appointment}
+            menu.choice "delete all appointments", -> {delete_all_appointments}
+            menu.choice "exit", -> {main_menu}
+        end
+
+    end
+
+    def main_menu
+        prompt = TTY::Prompt.new
+
+        welcome
+        puts "Hello #{@user_name.capitalize}!"
+        prompt.select("Hi") do |menu|
+            menu.choice "login", -> {check_user}
+            menu.choice "create account", -> {create_user}
+            menu.choice "appointments", -> {appointment_menu}
             menu.choice "exit"
         end
 
