@@ -5,7 +5,6 @@ require "pp"
 class CLI
     
     attr_reader :user_name, :user
-    attr_accessor :appointments
 
     def run
         clear
@@ -62,7 +61,7 @@ class CLI
 
     def check_appointment
         if appointment_valid?
-            @appointments = Appointment.where(user_id: @user.id)
+            Appointment.where(user_id: @user.id)
         else
             puts "Please create an appointment."
         end
@@ -96,7 +95,7 @@ class CLI
 
 
     def delete_all_appointment
-        check_appointments.delete_all
+        Appointment.where(user_id: @user.id).delete_all
     end
 
 
