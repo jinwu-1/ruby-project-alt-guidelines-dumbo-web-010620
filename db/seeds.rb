@@ -9,11 +9,11 @@ end
 colors = ["Blue", "Red", "Yellow", "Green", "White", "Black"]
 
 5.times do
-Bike.create(color: colors.sample, location: "Brooklyn", price: Faker::Commerce.price(range: 3..7.0))
+Bike.create(color: colors.sample, location: "Brooklyn", price: Faker::Commerce.price(range: 3..6.5))
 Bike.create(color: colors.sample, location: "Manhattan", price: Faker::Commerce.price(range: 7..10.0))
-Bike.create(color: colors.sample, location: "Bronx", price: Faker::Commerce.price(range: 3..6.0))
+Bike.create(color: colors.sample, location: "Bronx", price: Faker::Commerce.price(range: 3..6.5))
 Bike.create(color: colors.sample, location: "Queens", price: Faker::Commerce.price(range: 3..6.5))
-Bike.create(color: colors.sample, location: "Staten Island", price: Faker::Commerce.price(range: 2..5.5))
+Bike.create(color: colors.sample, location: "Staten Island", price: Faker::Commerce.price(range: 2.5..6.0))
 end
 
 Appointment.create(date: "01/23/2020" , time: "12:00PM" , user_id: User.all.sample.id, bike_id: Bike.all.sample.id)
