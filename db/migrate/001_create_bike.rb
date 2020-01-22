@@ -3,7 +3,7 @@ class CreateBike < ActiveRecord::Migration[5.1]
         create_table :bikes do |t|
             t.string :color
             t.string :location
-            t.integer :price
+            t.float :price
 
             t.timestamps
         end

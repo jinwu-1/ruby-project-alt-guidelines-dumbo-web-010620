@@ -42,7 +42,6 @@ class CLI
             User.create(name: @user_name)
         end
     end
-
     
 
     def appointment_valid?
