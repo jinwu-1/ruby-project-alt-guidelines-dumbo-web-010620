@@ -14,11 +14,9 @@ class CLI
         main_menu
     end
 
-
     def welcome
         puts "Welcome to CityRide".center(100)
     end
-
 
     def enter_name
         puts "Please enter your name"
@@ -41,7 +39,6 @@ class CLI
         end
     end
 
-
     def check_user
         clear
         if user_valid?
@@ -57,7 +54,6 @@ class CLI
             main_menu
         end
     end
-
 
     def create_user
         clear
@@ -86,7 +82,6 @@ class CLI
         end
     end
 
-
     def print_appointment
         app = Appointment.all.select {|i|i.user_id == @user.id}
         puts "-----------------------------------------"
@@ -102,7 +97,6 @@ class CLI
         end
     end
 
-
     def check_appointment
         clear
         if appointment_valid?
@@ -115,7 +109,6 @@ class CLI
             appointment_menu
         end
     end
-
 
     def create_appointment
         clear
@@ -136,7 +129,6 @@ class CLI
         appointment_menu
     end
 
-
     def location_selector
         prompt = TTY::Prompt.new
         prompt.select("Select location of bike") do |menu|
@@ -147,7 +139,6 @@ class CLI
             menu.choice "Staten Island", -> {puts bikes("Staten Island")}
         end
     end
-
 
     def update_appointment
         clear
@@ -175,8 +166,7 @@ class CLI
             appointment_menu
         end
     end
-
-    
+   
     def delete_appointment
         clear
         if print_appointment == []
@@ -196,7 +186,6 @@ class CLI
             appointment_menu
         end
     end
-
 
     def delete_all_appointments
         clear
@@ -232,11 +221,9 @@ class CLI
         bike_menu
     end
 
-
     def bike_location(location) 
        Bike.all.select {|bike|bike.location == location}
     end
-
 
     def bikes(location)
         bikes = bike_location(location)
@@ -271,7 +258,6 @@ class CLI
 
     end
 
-
     def appointment_menu
         prompt = TTY::Prompt.new
 
@@ -288,7 +274,6 @@ class CLI
 
     end
 
-
     def bike_menu
         prompt = TTY::Prompt.new
 
@@ -300,11 +285,9 @@ class CLI
         end
 
     end
-
    
     def clear
         system ("clear")
     end
-
 
 end
