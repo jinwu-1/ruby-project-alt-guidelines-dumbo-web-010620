@@ -152,16 +152,29 @@ class CLI
             date = gets.chomp
             puts "Please enter new time of the appointment. ex: 3:45PM"
             time = gets.chomp
+            puts "Are you sure? Y/N"
+            answer = gets.chomp.capitalize
+            if answer == "Y"
+                Appointment.find(id).update(date: date)
+                Appointment.find(id).update(time: time)
 
-            Appointment.find(id).update(date: date)
-            Appointment.find(id).update(time: time)
-
-            clear
-            puts "-----------------------------------------"
-            puts "Your appointment have been updated"
-            Appointment.find(id)
-            puts print_appointment
-            appointment_menu
+                clear
+                puts "-----------------------------------------"
+                puts "Your appointment have been updated"
+                Appointment.find(id)
+                puts print_appointment
+                appointment_menu
+            elsif answer == "N"
+                puts "-----------------------------------------"
+                puts "Your appointment have not been updated"
+                puts "-----------------------------------------"
+                appointment_menu
+            else
+                puts "-----------------------------------------"
+                puts "Wrong input, please try again"
+                puts "-----------------------------------------"
+                appointment_menu
+            end
         end
     end
    
@@ -176,12 +189,26 @@ class CLI
         else
             puts "Please enter the ID of the appointment you want to delete"
             id = gets.chomp
-            Appointment.find(id).destroy
-            clear
-            puts "-----------------------------------------"
-            puts "Your appointment have been deleted"
-            puts "-----------------------------------------"
-            appointment_menu
+            puts "Are you sure you want to delete this appointment? Y/N"
+            answer = gets.chomp.capitalize
+            if answer == "Y"
+                Appointment.find(id).destroy
+                clear
+                puts "-----------------------------------------"
+                puts "Your appointment have been deleted"
+                puts "-----------------------------------------"
+                appointment_menu  
+            elsif answer == "N"
+                puts "-----------------------------------------"
+                puts "Your appointment have not been deleted"
+                puts "-----------------------------------------"
+                appointment_menu
+            else
+                puts "-----------------------------------------"
+                puts "Wrong input, please try again"
+                puts "-----------------------------------------"
+                appointment_menu
+            end
         end
     end
 
@@ -194,12 +221,26 @@ class CLI
             puts "-----------------------------------------"
             appointment_menu
         else
-            Appointment.where(user_id: @user.id).destroy_all
-            clear
-            puts "-----------------------------------------"
-            puts "Your appointments have been deleted"
-            puts "-----------------------------------------"
-            appointment_menu
+            puts "Are you sure you want to delete all of your appointment(s)? Y/N"
+            answer = gets.chomp.capitalize
+            if answer == "Y"
+                Appointment.where(user_id: @user.id).destroy_all
+                clear
+                puts "-----------------------------------------"
+                puts "Your appointment(s) have been deleted"
+                puts "-----------------------------------------"
+                appointment_menu
+            elsif answer == "N"
+                puts "-----------------------------------------"
+                puts "Your appointment(s) have not been deleted"
+                puts "-----------------------------------------"
+                appointment_menu
+            else
+                puts "-----------------------------------------"
+                puts "Wrong input, please try again"
+                puts "-----------------------------------------"
+                appointment_menu
+            end
         end
     end
 
