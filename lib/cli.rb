@@ -11,7 +11,7 @@ class CLI
         welcome
         enter_name
         clear
-        main_menu
+        first_menu
     end
 
     def welcome
@@ -50,7 +50,7 @@ class CLI
             puts "-----------------------------------------"
             puts "Please create an account in our app"
             puts "-----------------------------------------"
-            main_menu
+            first_menu
         end
     end
 
@@ -60,13 +60,13 @@ class CLI
             puts "-----------------------------------------"
             puts "You already have an account"
             puts "-----------------------------------------"
-            main_menu
+            first_menu
         else
             @user = User.create(name: @user_name)
             puts "-----------------------------------------"
             puts "Account have been created"
             puts "-----------------------------------------"
-            main_menu
+            first_menu
         end
     end
 
@@ -141,6 +141,7 @@ class CLI
     def update_appointment
         clear
         if print_appointment == []
+            clear
             puts "-----------------------------------------"
             puts "You have no appointment scheduled"
             puts "-----------------------------------------"
@@ -280,25 +281,32 @@ class CLI
 
 # CLI Menus
 
-    def main_menu
+    def first_menu
         prompt = TTY::Prompt.new
         welcome
         puts "Hello #{@user_name.capitalize}!"
-        prompt.select("What would you like to do today?") do |menu|
+        prompt.select("Please login or create an account") do |menu|
             menu.choice "login", -> {check_user}
-            menu.choice "create account", -> {create_user}
+            menu.choice "create account", -> {create_user}        
+        end
+    end
+
+    def main_menu
+        prompt = TTY::Prompt.new
+        welcome
+        prompt.select("What would you like to do today?") do |menu|
             menu.choice "appointments", -> {appointment_menu}
             menu.choice "bikes", -> {bike_menu}
             menu.choice "exit"
         end
+        clear
     end
 
     def appointment_menu
         prompt = TTY::Prompt.new
         welcome
-        puts "Hello #{@user_name.capitalize}!"
         prompt.select("What would you like to do today?") do |menu|
-            menu.choice "make an appointment", -> {create_appointment}
+            menu.choice "create an appointment", -> {create_appointment}
             menu.choice "check an appointment", -> {check_appointment}
             menu.choice "update an appointment", -> {update_appointment}
             menu.choice "delete an appointment", -> {delete_appointment}
@@ -310,7 +318,6 @@ class CLI
     def bike_menu
         prompt = TTY::Prompt.new
         welcome
-        puts "Hello #{@user_name.capitalize}!"
         prompt.select("What would you like to do today?") do |menu|
             menu.choice "bike by location", -> {bike_by_location}
             menu.choice "back", -> {main_menu}
