@@ -8,4 +8,4 @@ cli = CLI.new
 
 
 # blah = Test.new
-# blah.menu
+# blah.loop_print(Appointment.all.first)

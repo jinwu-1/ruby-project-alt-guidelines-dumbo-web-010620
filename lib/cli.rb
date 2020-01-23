@@ -98,8 +98,8 @@ class CLI
         puts "Please select a bike from the list and enter the ID of the bike. ex: 58"
         bike_id = gets.chomp
         
-        Appointment.create(date: date, time: time, user_id: @user.id, bike_id: bike_id)
-        puts "Appointment have been created." # Interpolate the string ***
+        new_app = Appointment.create(date: date, time: time, user_id: @user.id, bike_id: bike_id)
+        puts "#{new_app.user.name}, your appointment at #{new_app.time} on #{new_app.date} has been created for bike: #{new_app.bike.id}." # Interpolate the string ***
         appointment_menu
     end
 
@@ -136,7 +136,7 @@ class CLI
 
     
     def delete_appointment
-        check_appointment
+        
         puts "Please enter the ID of the appointment you want to delete."
         id = gets.chomp
         Appointment.find(id).destroy
@@ -171,7 +171,7 @@ class CLI
 
     def main_menu
         prompt = TTY::Prompt.new
-
+        clear
         welcome
         puts "Hello #{@user_name.capitalize}!"
         prompt.select("Kindly ignore default message") do |menu|
@@ -187,7 +187,7 @@ class CLI
 
     def appointment_menu
         prompt = TTY::Prompt.new
-
+        clear 
         welcome
         puts "Hello #{@user_name.capitalize}!"
         prompt.select("What would you like to do today?") do |menu|
