@@ -28,7 +28,6 @@ class CLI
         end
     end
 
-
 # Users
 
     def user_valid?
@@ -70,7 +69,6 @@ class CLI
             main_menu
         end
     end
-
 
 # Appointments
     
@@ -205,7 +203,6 @@ class CLI
         end
     end
 
-
 #Bikes
 
     def bike_by_location
@@ -240,12 +237,10 @@ class CLI
         end
     end
 
-
 # CLI Menus
 
     def main_menu
         prompt = TTY::Prompt.new
-    
         welcome
         puts "Hello #{@user_name.capitalize}!"
         prompt.select("What would you like to do today?") do |menu|
@@ -255,12 +250,10 @@ class CLI
             menu.choice "bikes", -> {bike_menu}
             menu.choice "exit"
         end
-
     end
 
     def appointment_menu
         prompt = TTY::Prompt.new
-
         welcome
         puts "Hello #{@user_name.capitalize}!"
         prompt.select("What would you like to do today?") do |menu|
@@ -271,19 +264,16 @@ class CLI
             menu.choice "delete all appointments", -> {delete_all_appointments}
             menu.choice "back", -> {main_menu}
         end
-
     end
 
     def bike_menu
         prompt = TTY::Prompt.new
-
         welcome
         puts "Hello #{@user_name.capitalize}!"
         prompt.select("What would you like to do today?") do |menu|
             menu.choice "bike by location", -> {bike_by_location}
             menu.choice "back", -> {main_menu}
         end
-
     end
    
     def clear
