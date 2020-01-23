@@ -7,5 +7,4 @@ cli = CLI.new
  cli.run
 
 
-# blah = Test.new
-# blah.menu
+
