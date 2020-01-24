@@ -1,4 +1,4 @@
-class CreateBike < ActiveRecord::Migration[5.1]
+class CreateBikes < ActiveRecord::Migration[5.1]
     def change
         create_table :bikes do |t|
             t.string :color
