@@ -1,12 +1,16 @@
 require "tty-prompt"
 require "pry"
 require "pp"
+require "colorize"
 
 class CLI
     
     attr_reader :user_name, :user
 
     def run
+        clear
+        art
+        wait
         clear
         welcome
         enter_name
@@ -15,11 +19,13 @@ class CLI
     end
 
     def welcome
-        puts "Welcome to CityRide".center(100)
+        puts "--------------------------".center(100).colorize(:blue)
+        puts "Welcome to CityRide".center(100).colorize(:blue)
+        puts "--------------------------".center(100).colorize(:blue)
     end
 
     def enter_name
-        puts "Please enter your name"
+        puts "Please enter your name".colorize(:yellow)
         @user_name = gets.gsub(/[^0-9a-z]/i, '').downcase.capitalize
         if @user_name.length > 0
             true
@@ -42,14 +48,14 @@ class CLI
         clear
         if user_valid?
             @user = User.find_by(name: @user_name)
-            puts "-----------------------------------------"
-            puts "Logged in successfully"
-            puts "-----------------------------------------"
+            puts "-----------------------------------------".colorize(:green)
+            puts "Logged in successfully".colorize(:green)
+            puts "-----------------------------------------".colorize(:green)
             main_menu
         else
-            puts "-----------------------------------------"
-            puts "Please create an account in our app"
-            puts "-----------------------------------------"
+            puts "-----------------------------------------".colorize(:green)
+            puts "Please create an account in our app".colorize(:green)
+            puts "-----------------------------------------".colorize(:green)
             first_menu
         end
     end
@@ -57,15 +63,15 @@ class CLI
     def create_user
         clear
         if user_valid?
-            puts "-----------------------------------------"
-            puts "You already have an account"
-            puts "-----------------------------------------"
+            puts "-----------------------------------------".colorize(:green)
+            puts "You already have an account".colorize(:green)
+            puts "-----------------------------------------".colorize(:green)
             first_menu
         else
             @user = User.create(name: @user_name)
-            puts "-----------------------------------------"
-            puts "Account have been created"
-            puts "-----------------------------------------"
+            puts "-----------------------------------------".colorize(:green)
+            puts "Account have been created".colorize(:green)
+            puts "-----------------------------------------".colorize(:green)
             first_menu
         end
     end
@@ -82,16 +88,16 @@ class CLI
 
     def print_appointment
         app = Appointment.all.select {|i|i.user_id == @user.id}
-        puts "-----------------------------------------"
-        puts "See below for your upcoming appointments"
-        puts "-----------------------------------------"
+        puts "-----------------------------------------".colorize(:green)
+        puts "See below for your upcoming appointments".colorize(:green)
+        puts "-----------------------------------------".colorize(:green)
         app.map do |i|
             puts "ID: #{i.id}"
             puts "Date: #{i.date}"
             puts "Time: #{i.time}"
             bike = Bike.find(i.bike_id)
             puts "Location: #{bike.location}"
-            puts "-----------------------------------------"
+            puts "-----------------------------------------".colorize(:green)
         end
     end
 
@@ -101,9 +107,9 @@ class CLI
             print_appointment
             appointment_menu
         else
-            puts "-----------------------------------------"
-            puts "Please create an appointment"
-            puts "-----------------------------------------"
+            puts "-----------------------------------------".colorize(:green)
+            puts "Please create an appointment".colorize(:green)
+            puts "-----------------------------------------".colorize(:green)
             appointment_menu
         end
     end
@@ -121,9 +127,9 @@ class CLI
         
         Appointment.create(date: date, time: time, user_id: @user.id, bike_id: bike_id)
         clear
-        puts "-----------------------------------------"
-        puts "The appointment have been created"
-        puts "-----------------------------------------"
+        puts "-----------------------------------------".colorize(:green)
+        puts "The appointment have been created".colorize(:green)
+        puts "-----------------------------------------".colorize(:green)
         appointment_menu
     end
 
@@ -141,10 +147,9 @@ class CLI
     def update_appointment
         clear
         if print_appointment == []
-            clear
-            puts "-----------------------------------------"
-            puts "You have no appointment scheduled"
-            puts "-----------------------------------------"
+            puts "-----------------------------------------".colorize(:green)
+            puts "You have no appointment scheduled".colorize(:green)
+            puts "-----------------------------------------".colorize(:green)
             appointment_menu
         else 
             puts "Please enter the ID of the appointment you want to update."
@@ -160,20 +165,20 @@ class CLI
                 Appointment.find(id).update(time: time)
 
                 clear
-                puts "-----------------------------------------"
+                puts "-----------------------------------------".colorize(:green)
                 puts "Your appointment have been updated"
                 Appointment.find(id)
                 puts print_appointment
                 appointment_menu
             elsif answer == "N"
-                puts "-----------------------------------------"
-                puts "Your appointment have not been updated"
-                puts "-----------------------------------------"
+                puts "-----------------------------------------".colorize(:green)
+                puts "Your appointment have not been updated".colorize(:green)
+                puts "-----------------------------------------".colorize(:green)
                 appointment_menu
             else
-                puts "-----------------------------------------"
-                puts "Wrong input, please try again"
-                puts "-----------------------------------------"
+                puts "-----------------------------------------".colorize(:green)
+                puts "Wrong input, please try again".colorize(:green)
+                puts "-----------------------------------------".colorize(:green)
                 appointment_menu
             end
         end
@@ -183,9 +188,9 @@ class CLI
         clear
         if print_appointment == []
             clear
-            puts "-----------------------------------------"
-            puts "You have no appointment scheduled"
-            puts "-----------------------------------------"
+            puts "-----------------------------------------".colorize(:green)
+            puts "You have no appointment scheduled".colorize(:green)
+            puts "-----------------------------------------".colorize(:green)
             appointment_menu
         else
             puts "Please enter the ID of the appointment you want to delete"
@@ -195,19 +200,19 @@ class CLI
             if answer == "Y"
                 Appointment.find(id).destroy
                 clear
-                puts "-----------------------------------------"
-                puts "Your appointment have been deleted"
-                puts "-----------------------------------------"
+                puts "-----------------------------------------".colorize(:green)
+                puts "Your appointment have been deleted".colorize(:green)
+                puts "-----------------------------------------".colorize(:green)
                 appointment_menu  
             elsif answer == "N"
-                puts "-----------------------------------------"
-                puts "Your appointment have not been deleted"
-                puts "-----------------------------------------"
+                puts "-----------------------------------------".colorize(:green)
+                puts "Your appointment have not been deleted".colorize(:green)
+                puts "-----------------------------------------".colorize(:green)
                 appointment_menu
             else
-                puts "-----------------------------------------"
-                puts "Wrong input, please try again"
-                puts "-----------------------------------------"
+                puts "-----------------------------------------".colorize(:green)
+                puts "Wrong input, please try again".colorize(:green)
+                puts "-----------------------------------------".colorize(:green)
                 appointment_menu
             end
         end
@@ -217,9 +222,9 @@ class CLI
         clear
         if print_appointment == []
             clear
-            puts "-----------------------------------------"
-            puts "You have no appointment scheduled"
-            puts "-----------------------------------------"
+            puts "-----------------------------------------".colorize(:green)
+            puts "You have no appointment scheduled".colorize(:green)
+            puts "-----------------------------------------".colorize(:green)
             appointment_menu
         else
             puts "Are you sure you want to delete all of your appointment(s)? Y/N"
@@ -227,19 +232,19 @@ class CLI
             if answer == "Y"
                 Appointment.where(user_id: @user.id).destroy_all
                 clear
-                puts "-----------------------------------------"
-                puts "Your appointment(s) have been deleted"
-                puts "-----------------------------------------"
+                puts "-----------------------------------------".colorize(:green)
+                puts "Your appointment(s) have been deleted".colorize(:green)
+                puts "-----------------------------------------".colorize(:green)
                 appointment_menu
             elsif answer == "N"
-                puts "-----------------------------------------"
-                puts "Your appointment(s) have not been deleted"
-                puts "-----------------------------------------"
+                puts "-----------------------------------------".colorize(:green)
+                puts "Your appointment(s) have not been deleted".colorize(:green)
+                puts "-----------------------------------------".colorize(:green)
                 appointment_menu
             else
-                puts "-----------------------------------------"
-                puts "Wrong input, please try again"
-                puts "-----------------------------------------"
+                puts "-----------------------------------------".colorize(:green)
+                puts "Wrong input, please try again".colorize(:green)
+                puts "-----------------------------------------".colorize(:green)
                 appointment_menu
             end
         end
@@ -267,15 +272,15 @@ class CLI
     def bikes(location)
         bikes = bike_location(location)
         clear
-        puts "-----------------------------------------"
-        puts "List of Bikes in #{location}"
-        puts "-----------------------------------------"
+        puts "-----------------------------------------".colorize(:green)
+        puts "List of Bikes in #{location}".colorize(:green)
+        puts "-----------------------------------------".colorize(:green)
         bikes.map do |bike|
             puts "ID: #{bike.id}"
             puts "Color: #{bike.color}"
             puts "Location: #{bike.location}"
             puts "Price: $#{bike.price}"
-            puts "-----------------------------------------"
+            puts "-----------------------------------------".colorize(:green)
         end
     end
 
@@ -326,6 +331,43 @@ class CLI
    
     def clear
         system ("clear")
+    end
+
+    def wait
+        sleep(3)
+    end
+
+    def art
+        puts "                                                            |
+                          $   *.      **                                  |
+                  d$$$$$$$P                  $    J                       |
+                      ^$.                     4r  ^                       |
+                      d b                    .db                          |
+                     P   $                  e! $                          |
+            ..ec.. .@     *.              zP   $.zec..                    |
+        .^        3*b.     *.           .P@ .@ 4F      @4                 |
+      .@         d@  ^b.    *c        .$  d   $                           |
+     /          P      $.    c      d   @     3r           3              |
+    4        .eE........$r===e$$$$eeP    J       *..        b             |
+    $       $$$$$       $   4$$$$$$$     F       d$$$.      4             |
+    $       $$$$$       $   4$$$$$$$     L       *$$$       4             |
+    4         @      @@3P ===$$$$$$$     3                  P             |
+     *                 $       @@@        b                J              |
+     @.               .P                   %.             @               |
+        %.         z*                      ^%.        .r@                 |
+           @*==*@@                             ^@*==*@@   Gilo94@ ".colorize(:green)
+
+
+        puts "
+
+     --------------------------------------------------------------
+                        WELCOME TO CITYRIDE     
+     -------------------------------------------------------------- ".colorize(:blue)
+    
+    
+    
+    
+    
     end
 
 end
